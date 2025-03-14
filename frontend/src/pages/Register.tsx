@@ -6,20 +6,28 @@ const Register: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
     const navigate = useNavigate();
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(""); // Réinitialiser l'erreur avant la tentative
+        setError(""); 
+        setSuccess("");
 
         try {
             await axios.post(
                 `${import.meta.env.VITE_API_USER_SERVICE}/register`,
                 { email, password }
             );
-            navigate("/");
-        } catch (error) {
-            setError("Erreur lors de l'inscription. Vérifiez vos informations.");
+
+            setSuccess("Inscription réussie ! Redirection en cours..."); // ✅ Stocke le message de succès
+            setTimeout(() => navigate("/"), 2000);
+        } catch (error: any) {
+            if (error.response && error.response.status === 400) {
+                setError("Un compte est déjà associé à cet email.");
+            } else {
+                setError("Erreur lors de l'inscription. Vérifiez vos informations.");
+            }
         }
     };
 
@@ -36,6 +44,8 @@ const Register: React.FC = () => {
                 <div className="box" style={{ width: "400px", padding: "30px" }}>
                     <h2 className="title has-text-centered">Inscription</h2>
 
+                    {/* Affichage du message de succès */}
+                    {success && <p className="notification is-success has-text-centered">{success}</p>}
                     {/* Affichage de l'erreur si inscription échoue */}
                     {error && <p className="notification is-danger has-text-centered">{error}</p>}
 
@@ -55,7 +65,7 @@ const Register: React.FC = () => {
                         </div>
 
                         <div className="field">
-                            <label className="label">Mot de passe</label>
+                            <label className="label">Entrez un mot de passe</label>
                             <div className="control">
                                 <input 
                                     className="input" 

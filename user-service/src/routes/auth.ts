@@ -59,7 +59,7 @@ router.post("/login", async (req: Request, res: Response) => {
 
         console.log("Utilisateur trouvé :", user); // Vérifie que Sequelize retourne bien les données
 
-        if (!user) return res.status(400).json({ error: "Utilisateur non trouvé" });
+        if (!user || user ==null) return res.status(400).json({ error: "Utilisateur non trouvé" });
 
         console.log("Mot de passe récupéré :", user.password); // ✅ Ajoute ce log
 

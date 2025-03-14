@@ -19,8 +19,18 @@ const Login: React.FC = () => {
             );
             localStorage.setItem("token", response.data.token);
             navigate("/dashboard");
-        } catch (error) {
-            setError("Email ou mot de passe incorrect");
+        } catch (error: any) {
+            if (error.response) {
+                if (error.response.status === 400) {
+                    setError("Email inexistant");
+                } else if (error.response.status === 401) { // ✅ Ajout du `if` après `else`
+                    setError("Email ou mot de passe incorrect");
+                } else {
+                    setError("Une erreur est survenue. Veuillez réessayer.");
+                }
+            } else {
+                setError("Impossible de se connecter au serveur.");
+            }
         }
     };
 
