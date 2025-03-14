@@ -5,19 +5,22 @@ import axios from "axios";
 const Login: React.FC = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError(""); // Réinitialise les erreurs avant chaque tentative
+
         try {
             const response = await axios.post(
-                import.meta.env.VITE_API_USER_SERVICE + "/login",
+                `${import.meta.env.VITE_API_USER_SERVICE}/login`,
                 { email, password }
             );
             localStorage.setItem("token", response.data.token);
             navigate("/dashboard");
         } catch (error) {
-            console.error("Erreur de connexion", error);
+            setError("Email ou mot de passe incorrect");
         }
     };
 
@@ -32,20 +35,38 @@ const Login: React.FC = () => {
 
             {/* Conteneur du formulaire bien centré horizontalement mais en bas */}
             <div className="is-flex is-justify-content-center" style={{ marginTop: "50px" }}>
-                <div className="box" style={{ width: "400px" }}>
+                <div className="box" style={{ width: "400px", padding: "30px" }}>
                     <h2 className="title has-text-centered">Connexion</h2>
+
+                    {/* Affichage des erreurs */}
+                    {error && <p className="notification is-danger has-text-centered">{error}</p>}
+
                     <form onSubmit={handleLogin}>
                         <div className="field">
                             <label className="label">Email</label>
                             <div className="control">
-                                <input className="input" type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+                                <input 
+                                    className="input" 
+                                    type="email" 
+                                    placeholder="Email" 
+                                    value={email} 
+                                    onChange={(e) => setEmail(e.target.value)} 
+                                    required 
+                                />
                             </div>
                         </div>
 
                         <div className="field">
                             <label className="label">Mot de passe</label>
                             <div className="control">
-                                <input className="input" type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required />
+                                <input 
+                                    className="input" 
+                                    type="password" 
+                                    placeholder="Mot de passe" 
+                                    value={password} 
+                                    onChange={(e) => setPassword(e.target.value)} 
+                                    required 
+                                />
                             </div>
                         </div>
 
@@ -57,7 +78,6 @@ const Login: React.FC = () => {
                     </p>
                 </div>
             </div>
-
         </div>
     );
 };
