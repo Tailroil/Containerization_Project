@@ -1,10 +1,20 @@
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../database";
+import bcrypt from "bcryptjs"; 
 
-class User extends Model {
-    public id!: number;
-    public email!: string;
-    public password!: string;
+
+interface UserAttributes {
+    id: number;
+    email: string;
+    password: string;
+}
+
+interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+
+class User extends Model<UserAttributes, UserCreationAttributes> {
+    declare id: number;
+    declare email: string;
+    declare password: string;
 }
 
 User.init(
@@ -27,7 +37,26 @@ User.init(
     {
         sequelize,
         tableName: "users",
+        modelName: "User",
     }
 );
+
+const createDefaultUser = async () => {
+    try {
+        const existingUser = await User.findOne({ where: { email: "admin@email.com" } });
+
+        if (!existingUser) {
+            const hashedPassword = await bcrypt.hash("admin123", 10);
+            await User.create({ email: "admin@email.com", password: hashedPassword });
+            console.log("Utilisateur admin créé : admin@email.com / admin123");
+        } else {
+            console.log("ℹL'utilisateur admin existe déjà.");
+        }
+    } catch (error) {
+        console.error("Erreur lors de la création de l'utilisateur admin :", error);
+    }
+};
+
+createDefaultUser()
 
 export default User;

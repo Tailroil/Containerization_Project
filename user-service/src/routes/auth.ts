@@ -52,10 +52,16 @@ router.post("/login", async (req: Request, res: Response) => {
             return res.status(400).json({ error: "Email et mot de passe requis." });
         }
 
-        const user = await User.findOne({ where: { email } });
-        console.log("Utilisateur trouvé :", user);
+        const user = await User.findOne({ 
+            where: { email },
+            attributes: ["id", "email", "password"] 
+        });
+
+        console.log("Utilisateur trouvé :", user); // Vérifie que Sequelize retourne bien les données
 
         if (!user) return res.status(400).json({ error: "Utilisateur non trouvé" });
+
+        console.log("Mot de passe récupéré :", user.password); // ✅ Ajoute ce log
 
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) return res.status(401).json({ error: "Mot de passe incorrect" });
