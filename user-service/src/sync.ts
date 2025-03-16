@@ -3,7 +3,7 @@ import User from "./models/User";
 
 const syncDatabase = async (): Promise<void> => {
     try {
-        console.log("🔄 Synchronisation de la base de données...");
+        console.log("Synchronisation de la base de données...");
 
         await User.sync();
 

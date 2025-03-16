@@ -57,11 +57,11 @@ router.post("/login", async (req: Request, res: Response) => {
             attributes: ["id", "email", "password"] 
         });
 
-        console.log("Utilisateur trouvé :", user); // Vérifie que Sequelize retourne bien les données
+        console.log("Utilisateur trouvé :", user);
 
         if (!user || user ==null) return res.status(400).json({ error: "Utilisateur non trouvé" });
 
-        console.log("Mot de passe récupéré :", user.password); // ✅ Ajoute ce log
+        console.log("Mot de passe récupéré :", user.password);
 
         const isValid = await bcrypt.compare(password, user.password);
         if (!isValid) return res.status(401).json({ error: "Mot de passe incorrect" });
