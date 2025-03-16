@@ -1,11 +1,14 @@
 import fs from "fs";
 import csvParser from "csv-parser";
 import pool from "../config/db";
+import path from "path";
 
 async function importCsv() {
   const results: { pays: string; empreinte: number }[] = [];
+  const csvFilePath = path.resolve(__dirname, "../../data/data.csv");
 
-  fs.createReadStream("./data/data.csv")
+
+  fs.createReadStream(csvFilePath)
     .pipe(csvParser())
     .on("data", (row) => {
       results.push({ pays: row.Pays, empreinte: Number(row.Empreinte) });

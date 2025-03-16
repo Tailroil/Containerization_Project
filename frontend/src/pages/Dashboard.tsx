@@ -48,7 +48,7 @@ const handleDeviceCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newDevices = [...devices];
     newDevices[index] = {
       ...newDevices[index],
-      [field]: parseFloat(value) || 0, // Assure que la valeur est un nombre
+      [field]: parseFloat(value) || 0, 
     };
     setDevices(newDevices);
   };
