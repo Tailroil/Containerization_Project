@@ -1,6 +1,7 @@
 import express from "express";
 import pool from "../config/db";
 import cors from "cors";  // Importer cors
+import importCsv  from "../import_csv/importCsv"; 
 
 const app = express();
 const PORT = 3000;
@@ -13,14 +14,16 @@ app.use(express.json());
 async function startServer() {
   try {
       await pool.query("SELECT 1"); // Vérification simple de la connexion
-      console.log("✅ Connexion à PostgreSQL réussie !");
+      console.log("Connexion à PostgreSQL réussie !");
       
+      await importCsv; // Import CSV au démarrage
+
       app.listen(PORT, () => {
-          console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+          console.log(`Serveur démarré sur http://localhost:${PORT}`);
       });
 
   } catch (error) {
-      console.error("❌ Erreur de connexion à PostgreSQL :", error);
+      console.error("Erreur de connexion à PostgreSQL :", error);
       process.exit(1); // Quitter le processus si la BDD ne fonctionne pas
   }
 }
@@ -28,14 +31,15 @@ async function startServer() {
 
 app.get("/countries", async (req, res) => {
   try {
-    const { rows } = await pool.query("SELECT pays FROM empreinte_pays");
-    const countryList = rows.map(row => row.pays).join("\n"); // Séparer par des sauts de ligne
-    res.setHeader("Content-Type", "text/plain");
-    res.send(countryList);
+      const { rows } = await pool.query("SELECT pays FROM empreinte_pays");
+      res.json(rows); // Retourne directement le tableau JSON
   } catch (error) {
-    res.status(500).send("Erreur serveur");
+      console.error("Erreur lors de la récupération des pays :", error);
+      res.status(500).json({ message: "Erreur serveur" });
   }
 });
+
+
 
 app.get("/countries/:name", async (req, res) => {
   try {

@@ -7,6 +7,7 @@ async function importCsv() {
   const results: { pays: string; empreinte: number }[] = [];
   const csvFilePath = path.resolve(__dirname, "../../data/data.csv");
 
+  console.log("Chemin du fichier CSV:", csvFilePath);
 
   fs.createReadStream(csvFilePath)
     .pipe(csvParser())
@@ -21,8 +22,7 @@ async function importCsv() {
         );
       }
       console.log("Importation terminée !");
-      pool.end();
     });
 }
 
-importCsv();
+export default importCsv();
