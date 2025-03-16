@@ -168,7 +168,7 @@ useEffect(() => {
             </div>
         <div className="container mt-5">
             <div className="box has-background-dark p-5">
-                <h1 className="title has-text-centered has-text-white">Bienvenue sur votre tableau de bord</h1>
+                <h1 className="title has-text-centered has-text-white">Bienvenue sur l'interface de consommation personnelle</h1>
     
                 <div className="p-6 max-w-xl mx-auto bg-white rounded-xl shadow-md">
                     <h1 className="text-xl font-bold text-center mb-4">Calcul de Consommation d'Appareils</h1>
