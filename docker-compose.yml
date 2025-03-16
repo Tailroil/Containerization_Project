@@ -2,20 +2,76 @@ version: '3.8'
 
 services:
   user-service:
-    build: .
+    build: ./user-service
+    container_name: user-service
+    environment:
+      DB_HOST: user-db
+      DB_NAME: userdb
+      DB_USER: user
+      DB_PASSWORD: password
+      PORT: 5000
+      JWT_SECRET: yourSecret
     ports:
       - "5000:5000"
-    env_file: 
-      - .env
     depends_on:
-      - postgres
+      - user-db
+    networks:
+      - user_network
 
-  postgres:
-    image: postgres:14
-    restart: always
+  energy-service:
+    build: ./energy-service
+    container_name: energy-service
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: userdb
+      DB_HOST: energy-db
+      DB_PORT: 5432
+      DB_NAME: energydb
+      DB_USER: energy
+      DB_PASSWORD: password
+      PORT: 3000
     ports:
-      - "5432:5432"
+      - "3000:3000"
+    depends_on:
+      - energy-db
+    networks:
+      - energy_network
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "8080:80"   
+    networks:
+      - frontend_network
+
+  user-db:
+    image: postgres:13-alpine
+    container_name: user-db
+    environment:
+      POSTGRES_DB: userdb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - user-db-data:/var/lib/postgresql/data
+    networks:
+      - user_network
+
+  energy-db:
+    image: postgres:13-alpine
+    container_name: energy-db
+    environment:
+      POSTGRES_DB: energydb
+      POSTGRES_USER: energy
+      POSTGRES_PASSWORD: password
+    volumes:
+      - energy-db-data:/var/lib/postgresql/data
+    networks:
+      - energy_network
+
+networks:
+  user_network:
+  energy_network:
+  frontend_network:
+
+volumes:
+  user-db-data:
+  energy-db-data:

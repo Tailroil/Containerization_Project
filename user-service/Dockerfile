@@ -1,23 +1,33 @@
-#  Étape 1 : Utiliser une image Node.js avec npm préinstallé
-FROM node:18-alpine
+#builder image alpine
+FROM node:16-alpine AS builder
 
-#  Étape 2 : Définir le dossier de travail dans le conteneur
 WORKDIR /app
 
-#  Étape 3 : Copier les fichiers de configuration
-COPY package.json package-lock.json ./
-
-#  Étape 4 : Installer les dépendances
+# copiy des dependances et installation des packages
+COPY package*.json ./
 RUN npm install
 
-#  Étape 5 : Copier tout le code source
+# copy de tous les fichiers
 COPY . .
 
-#  Étape 6 : Compiler TypeScript en JavaScript
+# build du projet
 RUN npm run build
 
-#  Étape 7 : Exposer le port sur lequel l'application tourne
+
+FROM node:16-alpine
+
+WORKDIR /app
+
+# copy du build 
+COPY --from=builder /app/dist ./dist
+# copy des dependances
+COPY package*.json ./
+
+# installation depandances de production
+RUN npm install --only=production
+
+# port de server.ts
 EXPOSE 5000
 
-#  Étape 8 : Démarrer l'application
-CMD ["npm", "start"]
+# demarrer le server 
+CMD ["node", "dist/server.js"]

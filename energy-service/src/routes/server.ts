@@ -10,7 +10,6 @@ app.use(cors());
 
 app.use(express.json());
 
-
 async function startServer() {
   try {
       await pool.query("SELECT 1"); // Vérification simple de la connexion
