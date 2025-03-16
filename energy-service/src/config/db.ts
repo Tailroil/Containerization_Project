@@ -8,6 +8,7 @@ const client = new Client({
   port: Number(process.env.DB_PORT),
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  database: "postgres",
 });
 
 // Vérifie et crée la BDD si elle n'existe pas
