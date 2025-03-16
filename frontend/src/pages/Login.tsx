@@ -40,7 +40,7 @@ const Login: React.FC = () => {
             {/* Titre bien positionné en haut */}
             <h1 className="title is-1 has-text-primary has-text-centered mt-5" 
                 style={{ fontWeight: "bold", textTransform: "uppercase", letterSpacing: "2px" }}>
-                Site de Conversion
+                Site de Calcul de Consommation d'Énergie
             </h1>
 
             {/* Conteneur du formulaire bien centré horizontalement mais en bas */}
