@@ -10,7 +10,7 @@ const Login: React.FC = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError(""); // Réinitialise les erreurs avant chaque tentative
+        setError("");
 
         try {
             const response = await axios.post(
@@ -23,7 +23,7 @@ const Login: React.FC = () => {
             if (error.response) {
                 if (error.response.status === 400) {
                     setError("Email inexistant");
-                } else if (error.response.status === 401) { // ✅ Ajout du `if` après `else`
+                } else if (error.response.status === 401) {
                     setError("Email ou mot de passe incorrect");
                 } else {
                     setError("Une erreur est survenue. Veuillez réessayer.");

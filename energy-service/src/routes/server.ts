@@ -10,6 +10,22 @@ app.use(cors());
 
 app.use(express.json());
 
+async function startServer() {
+  try {
+      await pool.query("SELECT 1"); // Vérification simple de la connexion
+      console.log("✅ Connexion à PostgreSQL réussie !");
+      
+      app.listen(PORT, () => {
+          console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
+      });
+
+  } catch (error) {
+      console.error("❌ Erreur de connexion à PostgreSQL :", error);
+      process.exit(1); // Quitter le processus si la BDD ne fonctionne pas
+  }
+}
+
+
 app.get("/countries", async (req, res) => {
   try {
     const { rows } = await pool.query("SELECT pays FROM empreinte_pays");
@@ -40,6 +56,4 @@ app.get("/countries/:name", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Serveur démarré sur http://localhost:${PORT}`);
-});
+startServer();

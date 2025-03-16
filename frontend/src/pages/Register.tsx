@@ -20,7 +20,7 @@ const Register: React.FC = () => {
                 { email, password }
             );
 
-            setSuccess("Inscription réussie ! Redirection en cours..."); // ✅ Stocke le message de succès
+            setSuccess("Inscription réussie ! Redirection en cours..."); 
             setTimeout(() => navigate("/"), 2000);
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
