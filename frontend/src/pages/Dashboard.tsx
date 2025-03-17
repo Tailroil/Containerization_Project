@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
         .get(`http://localhost:3000/countries/${selectedCountry}`)
         .then((response) => {
           const emissionFactor = parseFloat(response.data as string);
-          const emission = consumption * emissionFactor;
+          const emission = consumption * emissionFactor / 1000;
           setTotalEmission(parseFloat(emission.toFixed(2)));
         })
         .catch((error) => {
@@ -192,7 +192,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 {countryEmission !== null && (
                   <p className="has-text-info mt-2">
-                    Empreinte carbone de {selectedCountry} : {countryEmission} g CO₂/kWh
+                    Empreinte carbone de {selectedCountry} : {countryEmission} kg CO₂/kWh
                   </p>
                 )}
               </div>
