@@ -12,7 +12,8 @@ services:
     ports:
       - "5000:5000"
     depends_on:
-      - user-db
+      user-db:
+        condition: service_healthy
     networks:
       - user_network
 
@@ -29,7 +30,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - energy-db
+      energy-db:
+        condition: service_healthy
     networks:
       - energy_network
 
@@ -52,6 +54,11 @@ services:
       - user-db-data:/var/lib/postgresql/data
     networks:
       - user_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user", "-d", "userdb"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
 
   energy-db:
     image: postgres:13-alpine
@@ -64,6 +71,11 @@ services:
       - energy-db-data:/var/lib/postgresql/data
     networks:
       - energy_network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "energy", "-d", "energydb"]
+      interval: 5s
+      retries: 5
+      start_period: 10s
 
 networks:
   user_network: {}
